@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Animated gradient background */
+    .bg-gradient {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(180deg, #000000 0%, #0a0a0a 40%, #1a1a1a 70%, #2d1b4e 100%);
+      background-size: 100% 200%;
+      animation: gradient-move 15s ease infinite;
+      z-index: -2;
+    }
+    
+    @keyframes gradient-move {
+      0%, 100% { background-position: 0% 0%; }
+      50% { background-position: 0% 100%; }
+    }
+    
+    /* Floating orbs */
+    .orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(60px);
+      opacity: 0.3;
+      animation: float 20s ease-in-out infinite;
+    }
+    
+    .orb-1 {
+      width: 400px;
+      height: 400px;
+      background: linear-gradient(45deg, #1e3a8a, #4c1d95);
+      top: -100px;
+      left: -100px;
+      animation-delay: 0s;
+    }
+    
+    .orb-2 {
+      width: 350px;
+      height: 350px;
+      background: linear-gradient(135deg, #1e3a8a, #4c1d95);
+      bottom: -100px;
+      right: -100px;
+      animation-delay: 3s;
+    }
+    
+    .orb-3 {
+      width: 300px;
+      height: 300px;
+      background: linear-gradient(225deg, #581c87, #701a75);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      animation-delay: 6s;
+    }
+    
+    /* Bottom gradient wave */
+    .bottom-gradient {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 40%;
+      background: linear-gradient(0deg, 
+        rgba(88, 28, 135, 0.4) 0%, 
+        rgba(76, 29, 149, 0.3) 25%,
+        rgba(30, 58, 138, 0.2) 50%,
+        transparent 100%);
+      z-index: -1;
+      animation: wave-rise 8s ease-in-out infinite;
+    }
+    
+    @keyframes wave-rise {
+      0%, 100% { 
+        transform: translateY(10%);
+        opacity: 0.4;
+      }
+      50% { 
+        transform: translateY(-5%);
+        opacity: 0.6;
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -50px) scale(1.1); }
+      66% { transform: translate(-30px, 30px) scale(0.9); }
+    }
+    
+    /* Grid pattern */
+    .grid-pattern {
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(rgba(30, 30, 30, 0.5) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(30, 30, 30, 0.5) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: -1;
+      animation: grid-move 20s linear infinite;
+    }
+    
+    @keyframes grid-move {
+      0% { transform: translate(0, 0); }
+      100% { transform: translate(50px, 50px); }
+    }
+    
+    /* Form animations */
+    .form-enter {
+      animation: slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Input glow effect */
+    .input-glow {
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    
+    .input-glow::before {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 0.75rem;
+      background: linear-gradient(45deg, #c0c0c0, #e5e5e5, #a8a8a8, #c0c0c0);
+      background-size: 300% 300%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+      animation: gradient-shift 3s ease infinite;
+    }
+    
+    .input-glow:hover::before {
+      opacity: 0.6;
+    }
+    
+    .input-glow:focus-within::before {
+      opacity: 1;
+    }
+    
+    .input-glow:hover {
+      transform: scale(1.01);
+    }
+    
+    .input-glow:focus-within {
+      transform: scale(1.02);
+    }
+    
+    @keyframes gradient-shift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    /* Button shine effect */
+    .btn-shine {
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .btn-shine::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(192, 192, 192, 0.4), transparent);
+      transition: left 0.5s ease;
+    }
+    
+    .btn-shine:hover::before {
+      left: 100%;
+    }
+    
+    .btn-shine::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 0.75rem;
+      background: linear-gradient(45deg, #c0c0c0, #e5e5e5, #a8a8a8, #c0c0c0);
+      background-size: 300% 300%;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: -1;
+      animation: gradient-shift 3s ease infinite;
+    }
+    
+    .btn-shine:hover::after {
+      opacity: 0.6;
+    }
+    
+    .fade { opacity: .2; transition: opacity .4s ease; }
+    
+    .overlay-center {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: rgba(0,0,0,.6);
+      backdrop-filter: blur(12px);
+      z-index: 999;
+    }
+    
+    .loader-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 180px;
+      height: 180px;
+      font-family: "Inter", sans-serif;
+      font-size: 1.2em;
+      font-weight: 300;
+      color: white;
+      border-radius: 50%;
+      background-color: transparent;
+      user-select: none;
+    }
+    
+    .loader {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      background-color: transparent;
+      animation: loader-rotate 2s linear infinite;
+      z-index: 0;
+    }
+    
+    @keyframes loader-rotate {
+      0% {
+        transform: rotate(90deg);
+        box-shadow:
+          0 10px 20px 0 #3f3f46 inset,
+          0 20px 30px 0 #27272a inset,
+          0 60px 60px 0 #18181b inset;
+      }
+      50% {
+        transform: rotate(270deg);
+        box-shadow:
+          0 10px 20px 0 #3f3f46 inset,
+          0 20px 10px 0 #52525b inset,
+          0 40px 60px 0 #09090b inset;
+      }
+      100% {
+        transform: rotate(450deg);
+        box-shadow:
+          0 10px 20px 0 #3f3f46 inset,
+          0 20px 30px 0 #27272a inset,
+          0 60px 60px 0 #18181b inset;
+      }
+    }
+    
+    .loader-letter {
+      display: inline-block;
+      opacity: 0.4;
+      transform: translateY(0);
+      animation: loader-letter-anim 2s infinite;
+      z-index: 1;
+      border-radius: 50ch;
+      color: #6b7280;
+      border: none;
+    }
+    
+    .loader-letter:nth-child(n) {
+      animation-delay: calc(0.1s * (var(--i)));
+    }
+    
+    @keyframes loader-letter-anim {
+      0%,100%{ opacity:0.4; transform:translateY(0);}
+      20%{ opacity:1; transform:scale(1.15);}
+      40%{ opacity:0.7; transform:translateY(0);}
+    }
+    
+    /* Title animation */
+    .title-shimmer {
+      background: linear-gradient(90deg, #d1d5db 0%, #6b7280 50%, #d1d5db 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: shimmer 3s linear infinite;
+    }
+    
+    @keyframes shimmer {
+      to { background-position: 200% center; }
+    }
+    
+    /* Particle effect */
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      background: #4b5563;
+      border-radius: 50%;
+      pointer-events: none;
+      animation: particle-float 4s ease-in-out infinite;
+      opacity: 0.4;
+    }
+    
+    @keyframes particle-float {
+      0%, 100% { 
+        transform: translateY(0) translateX(0);
+        opacity: 0;
+      }
+      10% { opacity: 0.6; }
+      90% { opacity: 0.6; }
+      100% { 
+        transform: translateY(-100vh) translateX(20px);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-zinc-900 text-white flex items-center justify-center min-h-screen">
+
+  <!-- Animated background -->
+  <div class="bg-gradient"></div>
+  <div class="bottom-gradient"></div>
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="grid-pattern"></div>
+
+  <!-- overlay -->
+  <div id="loader" class="overlay-center hidden">
+    <div class="loader-wrapper">
+      <span class="loader-letter" style="--i:1">L</span>
+      <span class="loader-letter" style="--i:2">o</span>
+      <span class="loader-letter" style="--i:3">g</span>
+      <span class="loader-letter" style="--i:4">g</span>
+      <span class="loader-letter" style="--i:5">i</span>
+      <span class="loader-letter" style="--i:6">n</span>
+      <span class="loader-letter" style="--i:7">g</span>
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <div id="formBox"
+    class="w-full max-w-md p-10 rounded-3xl bg-black/40 backdrop-blur-2xl shadow-2xl border border-zinc-800/50 transition form-enter relative overflow-hidden">
+    
+    <!-- Glass reflection effect -->
+    <div class="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-transparent pointer-events-none rounded-3xl"></div>
+
+    <h2 class="text-4xl font-bold text-center mb-2 title-shimmer relative z-10">Welcome Back</h2>
+    <p class="text-center text-zinc-500 mb-8 relative z-10">Sign in to access your notes</p>
+
+    <form id="loginForm" action="/login" method="POST" class="space-y-6 relative z-10">
+
+      <div class="input-glow">
+        <input class="w-full px-5 py-4 rounded-xl bg-black/60 border border-zinc-800 focus:border-zinc-600 outline-none transition text-zinc-300 placeholder-zinc-600"
+          type="email" name="email" placeholder="Email address" required/>
+      </div>
+
+      <div class="input-glow">
+        <input class="w-full px-5 py-4 rounded-xl bg-black/60 border border-zinc-800 focus:border-zinc-600 outline-none transition text-zinc-300 placeholder-zinc-600"
+          type="password" name="password" placeholder="Password" required/>
+      </div>
+
+      <button id="submitBtn" type="button"
+        class="w-full py-3 rounded-xl bg-gradient-to-r from-zinc-800 to-zinc-900 hover:from-zinc-700 hover:to-zinc-800 transition font-semibold text-base btn-shine shadow-lg shadow-black/50 hover:shadow-xl hover:shadow-black/60 transform hover:scale-[1.02] active:scale-[0.98] border border-zinc-700">
+        Sign In
+      </button>
+    </form>
+
+    <div class="mt-8 text-center text-sm text-zinc-600 relative z-10">
+      Don't have an account? 
+     <a href="/" class="text-zinc-400 hover:text-zinc-300 transition font-semibold hover:underline ml-1">Sign up</a>
+
+    </div>
+  </div>
+
+  <script>
+    const form = document.getElementById("loginForm");
+    const btn = document.getElementById("submitBtn");
+    const loader = document.getElementById("loader");
+    const box = document.getElementById("formBox");
+
+    // Create floating particles
+    function createParticle() {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = Math.random() * window.innerWidth + 'px';
+      particle.style.animationDelay = Math.random() * 4 + 's';
+      particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+      document.body.appendChild(particle);
+      
+      setTimeout(() => particle.remove(), 7000);
+    }
+
+    // Generate particles periodically
+    setInterval(createParticle, 400);
+
+    // reset on back
+    window.addEventListener("pageshow", () => {
+      box.classList.remove("fade");
+      loader.classList.add("hidden");
+      btn.disabled = false;
+      btn.textContent = "Sign In";
+    });
+
+    btn.addEventListener("click", () => {
+      btn.disabled = true;
+      btn.textContent = "Authenticating...";
+
+      box.classList.add("fade");
+      loader.classList.remove("hidden");
+
+      setTimeout(() => {
+        form.submit();
+      }, 3000); // exactly 3 sec
+    });
+
+    // Add input focus animations
+    const inputs = document.querySelectorAll('input[type="email"], input[type="password"]');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.style.transform = 'scale(1.02)';
+      });
+      input.addEventListener('blur', function() {
+        this.parentElement.style.transform = 'scale(1)';
+      });
+    });
+  </script>
+
+</body>
+</html>
