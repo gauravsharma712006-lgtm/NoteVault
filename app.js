@@ -54,7 +54,7 @@ app.post('/create', async (req,res)=>{
       return res.send("Email already registered");
     }
 
-    // hashing (no callback hell 🔥)
+    // hashing 
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // create user
@@ -69,10 +69,10 @@ app.post('/create', async (req,res)=>{
     const token = jwt.sign(
       { email }, 
       "???",
-      { expiresIn: "7d" }   // optional expiry
+      { expiresIn: "7d" }   // expiry
     );
 
-    // set cookie securely
+    
     res.cookie("token", token, {
       httpOnly:true,
       sameSite:"strict"
@@ -83,7 +83,7 @@ app.post('/create', async (req,res)=>{
 
   }catch(err){
     console.log(err);
-    res.send("Something went wrong 😔");
+    res.send("Something went wrong ...>");
   }
 });
 
@@ -191,3 +191,4 @@ app.get('/delete/:filename' , requireLogin,noCache,async function (req,res){
 
 
 app.listen(3000);
+
